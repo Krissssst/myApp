@@ -1,0 +1,27 @@
+{
+  "name": "myApp",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/Krissssst/myApp.git",
+  "author": "Krissssst <127079808+Krissssst@users.noreply.github.com>",
+  "license": "MIT",
+  "scripts": {
+    "start": "webpack-dev-server"
+  },
+  "dependencies": {
+    "@stomp/stompjs": "^7.0.0",
+    "sockjs-client": "^1.6.1",
+    "vue": "^3.3.4",
+    "vue-resource": "^1.5.3"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.22.5",
+    "@babel/preset-env": "^7.22.5",
+    "babel-loader": "^9.1.2",
+    "vue-loader": "^17.2.2",
+    "vue-template-compiler": "^2.7.14",
+    "webpack": "^5.88.1",
+    "webpack-cli": "^5.1.4",
+    "webpack-dev-server": "^4.15.1"
+  }
+}

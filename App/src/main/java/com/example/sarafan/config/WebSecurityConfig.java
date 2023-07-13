@@ -4,20 +4,13 @@ import com.example.sarafan.domain.User;
 import com.example.sarafan.repository.UserDetailsRepo;
 import org.springframework.boot.autoconfigure.security.oauth2.client.EnableOAuth2Sso;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.PrincipalExtractor;
-import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.oauth2.client.filter.OAuth2ClientContextFilter;
-import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
 
 @Configuration
 @EnableWebSecurity
@@ -26,19 +19,21 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
+
+                .antMatcher("/**")
                 .authorizeRequests()
-                .mvcMatchers("/**").permitAll()
+                .antMatchers("/", "/login**", "/js/**", "/error**").permitAll()
                 .anyRequest().authenticated()
+                .and().logout().logoutSuccessUrl("/").permitAll()
                 .and()
-//                .oauth2Login().and()
-                .formLogin().and().csrf().disable();
+                .csrf().disable();
     }
 
     @Bean
     public PrincipalExtractor principalExtractor(UserDetailsRepo userDetailsRepo) {
         return map -> {
             String id = (String) map.get("sub");
-            User user = userDetailsRepo.findById(id).orElseGet(()->{
+            User user = userDetailsRepo.findById(id).orElseGet(() -> {
 
                 User newUser = new User();
 
@@ -56,12 +51,4 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         };
     }
 
-//    @Bean
-//    public FilterRegistrationBean oauth2ClientFilterRegistration(
-//            OAuth2ClientContextFilter filter) {
-//        FilterRegistrationBean registration = new FilterRegistrationBean();
-//        registration.setFilter(filter);
-//        registration.setOrder(-100);
-//        return registration;
-//    }
 }
