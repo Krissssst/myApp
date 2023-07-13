@@ -48,4 +48,5 @@ public class Message {
     public void setCreationData(LocalDateTime creationData) {
         this.creationData = creationData;
     }
+     public Message(){}
 }
