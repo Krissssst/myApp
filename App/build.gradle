@@ -9,6 +9,10 @@ buildscript {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
     }
 }
+plugins {
+    id "com.github.node-gradle.node" version "3.1.1"
+}
+
 
 apply plugin: 'java'
 apply plugin: 'eclipse'
@@ -18,10 +22,21 @@ apply plugin: 'io.spring.dependency-management'
 group = 'letscode'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = 1.8
+task buildFront(type: YarnTask) {
+    args = ['build']
+}
+
+yarn_install.dependsOn(yarn_cache_clean)
+buildFront.dependsOn(yarn_install)
+processResources.dependsOn(buildFront)
 
 repositories {
     mavenCentral()
 }
+node {
+    download = true
+}
+
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     runtimeOnly 'org.springframework.boot:spring-boot-devtools'
@@ -29,10 +44,12 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation("org.springframework.boot:spring-boot-starter-websocket")
-    runtimeOnly 'org.postgresql:postgresql'
-    compileOnly 'org.projectlombok:lombok'
+    implementation 'org.postgresql:postgresql'
+    implementation'org.projectlombok:lombok'
     implementation'org.springframework.session:spring-session-jdbc'
-    annotationProcessor 'org.projectlombok:lombok'
+    implementation 'org.projectlombok:lombok'
+    implementation('io.sentry:sentry-spring:1.7.16')
+    implementation('org.jsoup:jsoup:1.11.3')
     implementation 'org.springframework.boot:spring-boot-starter-security:2.6.7'
     implementation 'org.springframework.security.oauth.boot:spring-security-oauth2-autoconfigure:2.1.9.RELEASE'
 
